@@ -1,7 +1,10 @@
-#define PYSET
-
 #include "python3.6m/Python.h"
-#include "set.h"
+#include <set>
+
+#include "gcd.h"
+
+
+
 
 static PyObject *py_gcd(PyObject *self, PyObject *args) {
     int x, y, result;
@@ -14,6 +17,8 @@ static PyObject *py_gcd(PyObject *self, PyObject *args) {
     return Py_BuildValue("i", result);
 }
 
+
+
 static PyMethodDef pysetMethods[] = {
     {"gcd", py_gcd, METH_VARARGS,
                      "Test for gcd"},
@@ -22,7 +27,7 @@ static PyMethodDef pysetMethods[] = {
 
 static struct PyModuleDef pysetmodule = {
     PyModuleDef_HEAD_INIT,
-    "gcd",
+    "pyset",
     "",
     -1,
     pysetMethods

@@ -1,28 +1,32 @@
 #include "python3.6m/Python.h"
 #include <set>
 
-#include "gcd.h"
 
 
 
+static int pyset_init(std::set<int> *self, PyObject *args, PyObject *kwargs) {
+    int type;
 
-static PyObject *py_gcd(PyObject *self, PyObject *args) {
-    int x, y, result;
+    if (!PyArg_ParseTuple(args, "i", &type)) return -1;
 
-    if (!PyArg_ParseTuple(args, "ii", &x, &y)) {
-        return NULL;
-    }
+    self = new std::set<int>;
 
-    result = gcd(x, y);
-    return Py_BuildValue("i", result);
+
+
+    return 0;
 }
+
+
+static PyTypeObject pysetType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "pyset.BST",
+    .tp_new = PyType_GenericNew,
+    .tp_init = (initproc) pyset_init
+};
 
 
 
 static PyMethodDef pysetMethods[] = {
-    {"gcd", py_gcd, METH_VARARGS,
-                     "Test for gcd"},
-    {NULL, NULL, 0, NULL}
 };
 
 static struct PyModuleDef pysetmodule = {
@@ -30,9 +34,15 @@ static struct PyModuleDef pysetmodule = {
     "pyset",
     "",
     -1,
-    pysetMethods
+    NULL, NULL, NULL, NULL, NULL
 };
 
 PyMODINIT_FUNC PyInit_pyset(void) {
-    return PyModule_Create(&pysetmodule);
+    PyObject *m;
+    
+
+    m = PyModule_Create(&pysetmodule);
+    Py_INCREF(&pysetType);
+    PyModule_AddObject(m, "BST", (PyObject *)&pysetType);
+    return m;
 }

@@ -1,0 +1,7 @@
+language: python
+
+install:
+    - ./build.sh
+
+script: 
+    - ./test.py

@@ -1,21 +1,19 @@
 #include "python3.6m/Python.h"
 #include <set>
 
-#include <typeinfo>
 #include <iostream>
+#include <typeinfo>
 
 
-struct A {
-    PyObject_HEAD
-    std::set<int> *s;
-};
+static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
+    void *c_type;
 
-
-static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    self->s = new std::set<int>;
-    return 0;
+    std::set<decltype(c_type)> *self;
+    self = (std::set<decltype(c_type)> *)type->tp_alloc(type, 0);
+    
+    return (PyObject *)self;
 }
-
+/*
 static PyObject *pyset_size(A *self) {
     int len = self->s->size();
     return Py_BuildValue("i", len);
@@ -32,18 +30,19 @@ static PyObject *pyset_add(A *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-static PyTypeObject pysetType = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "pyset.BST",
-};
-
-
 static PyMethodDef pyset_methods[] = {
     {"size", (PyCFunction)pyset_size, METH_NOARGS,
         "Return size of set"},
     {"add", (PyCFunction)pyset_add, METH_VARARGS,
         "Add item in set"},
     {NULL, NULL, 0, NULL}
+};
+*/
+
+static PyTypeObject pysetType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+ 
+    .tp_name = "pyset.BST",
 };
 
 
@@ -59,10 +58,9 @@ static struct PyModuleDef pysetmodule = {
 PyMODINIT_FUNC PyInit_pyset(void) {
     PyObject *m;
 
-    pysetType.tp_new = PyType_GenericNew;
-    pysetType.tp_init = (initproc)pyset_init;
-    pysetType.tp_methods = pyset_methods;
-    
+    pysetType.tp_new = pyset_new;
+    //pysetType.tp_methods = pyset_methods;
+
     if (PyType_Ready(&pysetType) < 0) return NULL;
 
     m = PyModule_Create(&pysetmodule);

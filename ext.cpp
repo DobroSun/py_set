@@ -1,11 +1,12 @@
 #include "python3.6m/Python.h"
 #include <set>
+
+#include <typeinfo>
 #include <iostream>
 
 
 struct A {
     PyObject_HEAD
-    PyObject *type;
     std::set<int> *s;
 };
 
@@ -20,12 +21,15 @@ static PyObject *pyset_size(A *self) {
     return Py_BuildValue("i", len);
 }
 
-int pyset_add(A *self, PyObject *args) {
+static PyObject *pyset_add(A *self, PyObject *args) {
     int item;
 
     if (!PyArg_ParseTuple(args, "i", &item)) PyErr_SetString(PyExc_Exception, "Exception");
 
+    std::cout << args->ob_type << std::endl;
+
     self->s->insert(item);
+    Py_RETURN_NONE;
 }
 
 static PyTypeObject pysetType = {

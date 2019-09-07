@@ -1,18 +1,32 @@
 #include "python3.6m/Python.h"
-#include <set>
 
-#include <typeinfo>
 #include <iostream>
-
+#include <string>
+#include <set>
 
 struct A {
     PyObject_HEAD
-    std::set<int> *s;
+    std::string type;
+    std::set<PyObject> *s;
 };
 
+static PyObject *_converting_values(PyObject *type, std::string *name) {
+    
+}
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    self->s = new std::set<int>;
+    PyObject *item = 0;
+    
+    PyArg_ParseTuple(args, "|O", &item);
+    
+    if (item) {
+        std::cout << "Creating user type" << std::endl;
+        self->type = std::string(item->ob_type->tp_name);
+    } else {
+        self->type = "";
+    }
+    
+    self->s = new std::set<PyObject>;
     return 0;
 }
 
@@ -22,13 +36,26 @@ static PyObject *pyset_size(A *self) {
 }
 
 static PyObject *pyset_add(A *self, PyObject *args) {
-    int item;
+    PyObject *item;
 
-    if (!PyArg_ParseTuple(args, "i", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    std::cout << "Current value ";
+    std::cout << std::string(item->ob_type->tp_name) << std::endl;
+    
+   
+    std::cout << "Expected value ";
+    std::cout << self->type << std::endl;
+    
+    if (self->type.empty()) {
+        std::cout << "Building first value" << std::endl;
+        self->type = std::string(item->ob_type->tp_name);
 
-    std::cout << args->ob_type << std::endl;
-
-    self->s->insert(item);
+    } else if (std::string(item->ob_type->tp_name) != self->type) {
+        std::cout << "Raising Error" << std::endl;
+        PyErr_SetString(PyExc_Exception, "Wrong type");
+    }
+    
+    //self->s->insert(*item);
     Py_RETURN_NONE;
 }
 

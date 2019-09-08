@@ -1,18 +1,7 @@
-#include "Python.h"
-
 #include <iostream>
 #include <string>
-#include <set>
 
-struct A {
-    PyObject_HEAD
-    std::string type;
-    std::set<PyObject> *s;
-};
-
-static PyObject *_converting_values(PyObject *type, std::string *name) {
-    
-}
+#include "utils.h"
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     PyObject *item = 0;

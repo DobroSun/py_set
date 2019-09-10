@@ -21,7 +21,7 @@ class TestSet(unittest.TestCase):
         self.assertEqual(pyset.BST().size(), 0)
 
     def test_add(self):
-        bst = pyset.BST(3)
+        bst = pyset.BST()
         try:
             bst.add(3)
         except:

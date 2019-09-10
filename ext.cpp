@@ -1,9 +1,10 @@
 #include <iostream>
-#include <string>
 
 #include "utils.h"
 
+
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
+
     PyObject *item = 0;
     
     PyArg_ParseTuple(args, "|O", &item);
@@ -14,8 +15,8 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     } else {
         self->type = "";
     }
-    
-    self->s = new std::set<PyObject>;
+    auto new_type = static_cast<int>(types::T_type);
+    self->s = new std::set<decltype(new_type)>;
     return 0;
 }
 
@@ -27,7 +28,10 @@ static PyObject *pyset_size(A *self) {
 static PyObject *pyset_add(A *self, PyObject *args) {
     PyObject *item;
 
-    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    if (!PyArg_ParseTuple(args, "i", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+
+    //PyObject *current = _converting_values(item, &self->type);
+
     std::cout << "Current value ";
     std::cout << std::string(item->ob_type->tp_name) << std::endl;
     
@@ -44,7 +48,7 @@ static PyObject *pyset_add(A *self, PyObject *args) {
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }
     
-    //self->s->insert(*item);
+    self->s->insert(item);
     Py_RETURN_NONE;
 }
 

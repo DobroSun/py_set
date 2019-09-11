@@ -15,8 +15,8 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     } else {
         self->type = "";
     }
-    auto new_type = static_cast<int>(types::T_type);
-    self->s = new std::set<decltype(new_type)>;
+    self->s = new std::set<std::variant<int, double>>;
+
     return 0;
 }
 
@@ -30,25 +30,18 @@ static PyObject *pyset_add(A *self, PyObject *args) {
 
     if (!PyArg_ParseTuple(args, "i", &item)) PyErr_SetString(PyExc_Exception, "Exception");
 
-    //PyObject *current = _converting_values(item, &self->type);
-
-    std::cout << "Current value ";
-    std::cout << std::string(item->ob_type->tp_name) << std::endl;
-    
-   
-    std::cout << "Expected value ";
-    std::cout << self->type << std::endl;
-    
     if (self->type.empty()) {
-        std::cout << "Building first value" << std::endl;
         self->type = std::string(item->ob_type->tp_name);
 
     } else if (std::string(item->ob_type->tp_name) != self->type) {
-        std::cout << "Raising Error" << std::endl;
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }
     
-    self->s->insert(item);
+    auto current = _converting_values(item, &self->type);
+
+
+    self->s->insert(3.0);
+    //self->s->insert(item);
     Py_RETURN_NONE;
 }
 

@@ -23,7 +23,7 @@ class TestSet(unittest.TestCase):
     def test_add(self):
         bst = pyset.BST()
         try:
-            bst.add(3)
+            bst.add(3.0)
         except:
             self.fail()
 

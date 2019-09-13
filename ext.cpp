@@ -15,7 +15,7 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     } else {
         self->type = "";
     }
-    self->s = new std::set<std::variant<int, double>>;
+    self->s = new std::set<std::variant<int, double, std::string>>;
 
     return 0;
 }
@@ -28,7 +28,7 @@ static PyObject *pyset_size(A *self) {
 static PyObject *pyset_add(A *self, PyObject *args) {
     PyObject *item;
 
-    if (!PyArg_ParseTuple(args, "i", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
 
     if (self->type.empty()) {
         self->type = std::string(item->ob_type->tp_name);
@@ -36,12 +36,11 @@ static PyObject *pyset_add(A *self, PyObject *args) {
     } else if (std::string(item->ob_type->tp_name) != self->type) {
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }
-    
-    auto current = _converting_values(item, &self->type);
 
+    auto current = converting_values(item, &self->type);
 
-    self->s->insert(3.0);
-    //self->s->insert(item);
+    self->s->insert(current);
+
     Py_RETURN_NONE;
 }
 

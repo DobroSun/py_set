@@ -15,7 +15,7 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     } else {
         self->type = "";
     }
-    self->s = new std::set<std::variant<int, double, std::string>>;
+    self->s = new std::set<VARIANT_TYPE>;
 
     return 0;
 }

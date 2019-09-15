@@ -1,6 +1,7 @@
 .*.swp
 .*.swo
 .*.swn
+.*.swm
 
 *.pyc
 __pycache__

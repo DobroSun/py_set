@@ -2,28 +2,25 @@
 #include "utils.h"
 
 
-static int pyset_init(PyObject *m, PyObject *args, PyObject *kwargs) {
-    A *self = (A *)m;
+static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
 
     self->s = new std::set<VARIANT_TYPE>;
     return 0;
 }
-/*
-static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
-    printf("I'm here");
 
-    A *self = (A *)pyset_type.tp_new(type, args, kwargs);
+static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
+    A *self;
+    self = (A *)type->tp_alloc(type, 0);
 
     if (!self) {
         return NULL;
     }
     return (PyObject *)self;
-}*/
+}
 
 
 
-static PyObject *pyset_size(PyObject *m) {
-    A *self = (A *)m;
+static PyObject *pyset_size(A *self) {
     int len = self->s->size();
     return Py_BuildValue("i", len);
 }
@@ -34,8 +31,7 @@ static PyObject *pyset_empty(A *self) {
     return Py_BuildValue("i", emp);
 }
 
-static PyObject *pyset_add(PyObject *m, PyObject *args) {
-    A *self = (A *)m;
+static PyObject *pyset_add(A *self, PyObject *args) {
     PyObject *item;
 
     if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
@@ -94,8 +90,12 @@ static struct PyModuleDef pysetmodule = {
 PyMODINIT_FUNC PyInit_pyset(void) {
     PyObject *m;
 
+    // It doesn't work inside pysetType, so It has to be defined there
     pysetType.tp_name = "pyset.BST",
-    pysetType.tp_new = PyType_GenericNew;
+    pysetType.tp_itemsize = 0,
+    pysetType.tp_flags = Py_TPFLAGS_DEFAULT,
+    pysetType.tp_basicsize = sizeof(A),
+    pysetType.tp_new = pyset_new;
     pysetType.tp_init = (initproc)pyset_init;
     pysetType.tp_methods = pyset_methods;
     

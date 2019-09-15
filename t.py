@@ -1,13 +1,15 @@
 import pyset
 
-bst = pyset.BST()
-print(bst)
 ne = pyset.BST()
+bst = pyset.BST()
+print(bst.find(34))
+print(bst)
 print(ne)
 print(ne is bst)
 
+ne.add(30)
+bst.add(30)
 print(bst)
 print(bst.size())
-ne.add(3)
 print(ne.size())
-bst.add("lo")
+print(bst.size())

@@ -5,7 +5,7 @@
 #include <set>
 #include <string>
 
-#define VARIANT_TYPE std::variant<double, std::string, long int>
+#define VARIANT_TYPE std::variant<double, std::string, long int, int>
 
 typedef struct {
     PyObject_HEAD
@@ -15,6 +15,7 @@ typedef struct {
 } A;
 
 VARIANT_TYPE converting_values(A *self, PyObject *item) {
+/*
 	if (item) {
         self->type = std::string(item->ob_type->tp_name);
     } else PyErr_SetString(PyExc_Exception, "Wrong type");
@@ -44,7 +45,9 @@ VARIANT_TYPE converting_values(A *self, PyObject *item) {
     } else {
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }
-    return NULL;
+    */
+    VARIANT_TYPE a = 3;
+    return a;
 }
 
 

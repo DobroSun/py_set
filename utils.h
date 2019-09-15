@@ -15,21 +15,18 @@ typedef struct {
 } A;
 
 VARIANT_TYPE converting_values(A *self, PyObject *item) {
-/*
-	if (item) {
-        self->type = std::string(item->ob_type->tp_name);
-    } else PyErr_SetString(PyExc_Exception, "Wrong type");
-    PyObject *tmp;
+    std::string type(item->ob_type->tp_name);
 
-    if (self->type == std::string("float") && PyFloat_Check(item)) {
+    PyObject *tmp;
+    if (type == std::string("float")) {
         VARIANT_TYPE d = PyFloat_AsDouble(item);
         return d;
 
-    } else if (self->type == std::string("int")) {
+    } else if (type == std::string("int")) {
         VARIANT_TYPE l = PyLong_AsLong(item);
         return l;
 
-    } else if (self->type == std::string("str")) {
+    } else if (type == std::string("str")) {
         if (PyUnicode_Check(item)) {
             tmp = PyUnicode_AsUTF8String(item);
         } else if (PyBytes_Check(item)) {
@@ -45,9 +42,8 @@ VARIANT_TYPE converting_values(A *self, PyObject *item) {
     } else {
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }
-    */
-    VARIANT_TYPE a = 3;
-    return a;
+    PyErr_SetString(PyExc_Exception, "Wrong type");
+    return NULL;
 }
 
 

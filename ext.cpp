@@ -3,7 +3,6 @@
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-
     self->s = new std::set<VARIANT_TYPE>;
     return 0;
 }

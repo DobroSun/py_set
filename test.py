@@ -30,24 +30,33 @@ class TestSet(unittest.TestCase):
         bst = pyset.BST()
         bst.add("lol")
         self.assertEqual(bst.find("lol"), 1)
+        self.assertEqual(bst.find(38450), 0)
 
 
     def test_is_empty(self):
         bst = pyset.BST()
         self.assertEqual(bst.is_empty(), 1)
         bst.add(3)
+
         self.assertEqual(bst.is_empty(), 0)
 
     def test_size(self):
         bst = pyset.BST()
         self.assertEqual(bst.size(), 0)
+        for i in range(10):
+            bst.add(i)
+        self.assertEqual(bst.size(), 10)
 
-        new_bst = pyset.BST()
-        new_bst.add(43)
-
-        self.assertEqual(bst.size(), 0)
-        self.assertEqual(new_bst.size(), 1)
-
+    def test_several_instances(self):
+        try:
+            bst = pyset.BST()
+            nw = pyset.BST()
+            ny = pyset.BST()
+            bst.add(4)
+            nw.add(6.84)
+            ny.add("Hello world")
+        except:
+            self.fail()
 
 if __name__ == "__main__":
     unittest.main()

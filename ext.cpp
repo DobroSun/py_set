@@ -102,6 +102,7 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     if (PyType_Ready(&pysetType) < 0) return NULL;
 
     m = PyModule_Create(&pysetmodule);
+    if (m == NULL) return NULL;
 
     Py_INCREF(&pysetType);
     PyModule_AddObject(m, "BST", (PyObject *)&pysetType);

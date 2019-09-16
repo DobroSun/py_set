@@ -5,16 +5,41 @@
 #include <set>
 #include <string>
 
-#define VARIANT_TYPE std::variant<double, std::string, long int, int>
+#define VARIANT_TYPE std::variant<double, std::string, long int>
 
 typedef struct {
     PyObject_HEAD
-    std::string type;
 
     std::set<VARIANT_TYPE> *s;
+    std::set<VARIANT_TYPE>::iterator it;
 } A;
 
-VARIANT_TYPE converting_values(A *self, PyObject *item) {
+void fill_pyset(A *self, int *c_start=NULL, int *c_stop=NULL, int *c_step=NULL) {
+    int start, stop, step;
+    stop = *c_stop;
+    if (c_start == NULL && c_step == NULL) {
+        start = 0;
+        step = 1;
+    } else if (c_step == NULL) {
+        start = *c_start;
+        step = 1;
+    } else {
+        start = *c_start;
+        step = *c_step;
+    }
+    for (long int i = start; i < stop; i += step) {
+        self->s->insert(i);
+    }
+    
+}
+
+static PyObject *from_c_values(VARIANT_TYPE value) {
+    //item = std::get<PyObject>(value);
+    Py_RETURN_NONE;
+}
+
+
+VARIANT_TYPE to_c_values(A *self, PyObject *item) {
     std::string type(item->ob_type->tp_name);
 
     PyObject *tmp;

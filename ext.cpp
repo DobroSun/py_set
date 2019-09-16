@@ -3,7 +3,19 @@
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
+    int start, stop, step;
+   
     self->s = new std::set<VARIANT_TYPE>;
+
+    if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
+        fill_pyset(self, &start, &stop, &step);
+    
+    } else if (PyArg_ParseTuple(args, "|ii", &start, &stop)) {
+        fill_pyset(self, &start, &stop, &step);
+
+    } else if (PyArg_ParseTuple(args, "|i", &stop)) {
+        fill_pyset(self, &start, &stop, &step);
+    }
     return 0;
 }
 
@@ -16,8 +28,32 @@ static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
     }
     return (PyObject *)self;
 }
+/*
+static PyObject *pyset_iter(PyObject *p) {
+    A *self;
+    self = (A *)p;
+    self->it = self->s->begin();
 
+    Py_INCREF(p);
+    return p;
+}
 
+static PyObject *pyset_iternext(PyObject *p) {
+    A *self;
+    self = (A *)p;
+    
+    if (self->it != self->s->end()) {
+        //VARIANT_TYPE tmp = *(self->it);
+        auto tmp = std::get<PyObject *>(*(self->it));
+        (self->it)++;
+        return tmp;
+    } else {
+        self->it = self->s->begin();
+        PyErr_SetNone(PyExc_StopIteration);
+        return NULL;
+    }
+
+}*/
 
 static PyObject *pyset_size(A *self) {
     int len = self->s->size();
@@ -35,7 +71,7 @@ static PyObject *pyset_add(A *self, PyObject *args) {
 
     if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
 
-    auto current = converting_values(self, item);
+    auto current = to_c_values(self, item);
 
     self->s->insert(current);
 
@@ -48,7 +84,7 @@ static PyObject *pyset_find(A *self, PyObject *args) {
 
     if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
 
-    auto current = converting_values(self, item);
+    auto current = to_c_values(self, item);
 
     auto search = self->s->find(current);
     if (search != self->s->end()) {
@@ -57,6 +93,19 @@ static PyObject *pyset_find(A *self, PyObject *args) {
         res = 0;
     }
     return Py_BuildValue("i", res);
+}
+
+static PyObject *pyset_to_list(A *self, PyObject *args) {
+    PyObject *list;
+    list = PyList_New(0);
+    if (!list) return NULL;
+
+    for (auto i: *(self->s)) {
+        auto item = from_c_values(i); 
+        PyList_Append(list, item);
+    }
+    
+    return Py_BuildValue("[]", &list);
 }
 
 static PyTypeObject pysetType = {
@@ -73,6 +122,8 @@ static PyMethodDef pyset_methods[] = {
         "Search for items in set"},
     {"is_empty", (PyCFunction)pyset_empty, METH_NOARGS,
         "Checks if pyset is empty or not"},
+    {"to_list", (PyCFunction)pyset_to_list, METH_VARARGS,
+        "Return list of pyset items"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -97,6 +148,8 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     pysetType.tp_new = pyset_new;
     pysetType.tp_init = (initproc)pyset_init;
     pysetType.tp_methods = pyset_methods;
+    //pysetType.tp_iter = pyset_iter;
+    //pysetType.tp_iternext = pyset_iternext;
     
     if (PyType_Ready(&pysetType) < 0) return NULL;
 

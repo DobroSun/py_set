@@ -58,5 +58,19 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
+    def test_range_constructor(self):
+        try:
+            # Have to check (10, 4, -1) too
+            bst = pyset.BST(10)
+            al = pyset.BST(2, 10)
+            ls = pyset.BST(1, 4, 1)
+        except:
+            self.fail()
+
+    def test_to_list(self):
+        bst = pyset.BST()
+        bst.add(48)
+        self.assertEqual(bst.to_list(), [48])
+
 if __name__ == "__main__":
     unittest.main()

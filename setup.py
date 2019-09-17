@@ -1,8 +1,8 @@
 from distutils.core import setup, Extension
 
 module = Extension("pyset",
-                   library_dirs=["."],
-                   libraries=["utils.h"],
+                   library_dirs=["/usr/include/"],
+                   libraries=["variant"],
                    sources = ["ext.cpp"])
 
          

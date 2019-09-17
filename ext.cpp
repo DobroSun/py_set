@@ -3,19 +3,25 @@
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    int start, stop, step;
-   
+    //int start, stop, step;
     self->s = new std::set<VARIANT_TYPE>;
 
-    if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
-        fill_pyset(self, &start, &stop, &step);
-    
-    } else if (PyArg_ParseTuple(args, "|ii", &start, &stop)) {
-        fill_pyset(self, &start, &stop, &step);
 
-    } else if (PyArg_ParseTuple(args, "|i", &stop)) {
-        fill_pyset(self, &start, &stop, &step);
-    }
+    /*if (PyArg_ParseTuple(args, "|i", &stop)) {
+        printf("i\n");
+
+        fill_pyset(self, stop);
+
+    } else if (PyArg_ParseTuple(args, "|ii", &start, &stop)) {
+        printf("ii\n");
+
+        fill_pyset(self, start, stop);
+
+    } else if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
+        printf("iii\n");
+
+        fill_pyset(self, start, stop, step);
+    }*/
     return 0;
 }
 
@@ -28,7 +34,7 @@ static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
     }
     return (PyObject *)self;
 }
-/*
+
 static PyObject *pyset_iter(PyObject *p) {
     A *self;
     self = (A *)p;
@@ -43,8 +49,7 @@ static PyObject *pyset_iternext(PyObject *p) {
     self = (A *)p;
     
     if (self->it != self->s->end()) {
-        //VARIANT_TYPE tmp = *(self->it);
-        auto tmp = std::get<PyObject *>(*(self->it));
+        auto tmp = from_c_values(*self->it);
         (self->it)++;
         return tmp;
     } else {
@@ -53,7 +58,7 @@ static PyObject *pyset_iternext(PyObject *p) {
         return NULL;
     }
 
-}*/
+}
 
 static PyObject *pyset_size(A *self) {
     int len = self->s->size();
@@ -98,14 +103,15 @@ static PyObject *pyset_find(A *self, PyObject *args) {
 static PyObject *pyset_to_list(A *self, PyObject *args) {
     PyObject *list;
     list = PyList_New(0);
+
     if (!list) return NULL;
 
     for (auto i: *(self->s)) {
-        auto item = from_c_values(i); 
+        PyObject *item = from_c_values(i);
         PyList_Append(list, item);
     }
     
-    return Py_BuildValue("[]", &list);
+    return list;
 }
 
 static PyTypeObject pysetType = {
@@ -148,8 +154,8 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     pysetType.tp_new = pyset_new;
     pysetType.tp_init = (initproc)pyset_init;
     pysetType.tp_methods = pyset_methods;
-    //pysetType.tp_iter = pyset_iter;
-    //pysetType.tp_iternext = pyset_iternext;
+    pysetType.tp_iter = pyset_iter;
+    pysetType.tp_iternext = pyset_iternext;
     
     if (PyType_Ready(&pysetType) < 0) return NULL;
 

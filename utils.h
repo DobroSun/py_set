@@ -5,7 +5,7 @@
 #include <set>
 #include <string>
 
-#define VARIANT_TYPE std::variant<double, std::string, long int>
+#define VARIANT_TYPE std::variant<double, char*, long int>
 
 typedef struct {
     PyObject_HEAD
@@ -14,28 +14,42 @@ typedef struct {
     std::set<VARIANT_TYPE>::iterator it;
 } A;
 
-void fill_pyset(A *self, int *c_start=NULL, int *c_stop=NULL, int *c_step=NULL) {
-    int start, stop, step;
-    stop = *c_stop;
-    if (c_start == NULL && c_step == NULL) {
-        start = 0;
-        step = 1;
-    } else if (c_step == NULL) {
-        start = *c_start;
-        step = 1;
-    } else {
-        start = *c_start;
-        step = *c_step;
+struct visit_helper {
+    PyObject *operator()(double d) const {
+        return Py_BuildValue("d", d);
     }
-    for (long int i = start; i < stop; i += step) {
+    PyObject *operator()(long int l) const {
+        return Py_BuildValue("l", l);
+    }
+    PyObject *operator()(char *s) const {
+        return Py_BuildValue("s", s);
+    }
+
+};
+
+
+void fill_pyset(A *self, int start, int stop, int step) {
+    int p = (step > 0)?1: -1;
+
+    for (long int i = start; p*i < p*stop; i += step) {
         self->s->insert(i);
     }
-    
+}
+void fill_pyset(A *self, int start, int stop) {
+    for (long int i = start; i < stop; i++) {
+        self->s->insert(i);
+    }
+} 
+void fill_pyset(A *self, int stop) {
+    for (long int i = 0; i < stop; i++) {
+        self->s->insert(i);
+    }
 }
 
 static PyObject *from_c_values(VARIANT_TYPE value) {
-    //item = std::get<PyObject>(value);
-    Py_RETURN_NONE;
+    PyObject *val;
+    val = std::visit(visit_helper{}, value);
+    return val;
 }
 
 
@@ -61,8 +75,7 @@ VARIANT_TYPE to_c_values(A *self, PyObject *item) {
             PyErr_SetString(PyExc_Exception, "Wrong type");
         }
 
-        VARIANT_TYPE s = std::string(PyBytes_AsString(tmp));
-
+        VARIANT_TYPE s = PyBytes_AsString(tmp);
         return s;
     } else {
         PyErr_SetString(PyExc_Exception, "Wrong type");

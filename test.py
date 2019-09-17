@@ -26,6 +26,7 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
+    @unittest.expectedFailure
     def test_find(self):
         bst = pyset.BST()
         bst.add("lol")
@@ -58,12 +59,14 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
+    @unittest.expectedFailure
     def test_range_constructor(self):
         try:
             # Have to check (10, 4, -1) too
             bst = pyset.BST(10)
+            self.assertEqual(bst.to_list(), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
             al = pyset.BST(2, 10)
-            ls = pyset.BST(1, 4, 1)
+            ls = pyset.BST(10, 4, -1)
         except:
             self.fail()
 
@@ -71,6 +74,16 @@ class TestSet(unittest.TestCase):
         bst = pyset.BST()
         bst.add(48)
         self.assertEqual(bst.to_list(), [48])
+
+    def test_iterations(self):
+        expected = []
+        bst = pyset.BST()
+        for i in range(1, 100):
+            bst.add(i)
+
+        for i in bst:
+            expected.append(i)
+        self.assertEqual(bst.to_list(), expected)
 
 if __name__ == "__main__":
     unittest.main()

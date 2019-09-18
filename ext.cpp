@@ -5,11 +5,10 @@
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     //int start, stop, step;
     self->s = new std::set<VARIANT_TYPE>;
-
-
-    /*if (PyArg_ParseTuple(args, "|i", &stop)) {
+/*
+    if (PyArg_ParseTuple(args, "|i", &stop)) {
         printf("i\n");
-
+        
         fill_pyset(self, stop);
 
     } else if (PyArg_ParseTuple(args, "|ii", &start, &stop)) {

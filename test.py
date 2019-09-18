@@ -26,7 +26,6 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
-    @unittest.expectedFailure
     def test_find(self):
         bst = pyset.BST()
         bst.add("lol")
@@ -59,7 +58,6 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
-    @unittest.expectedFailure
     def test_range_constructor(self):
         try:
             # Have to check (10, 4, -1) too

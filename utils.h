@@ -5,7 +5,7 @@
 #include <set>
 #include <string>
 
-#define VARIANT_TYPE std::variant<double, char*, long int>
+#define VARIANT_TYPE std::variant<double, const char*, long int>
 
 typedef struct {
     PyObject_HEAD
@@ -21,7 +21,7 @@ struct visit_helper {
     PyObject *operator()(long int l) const {
         return Py_BuildValue("l", l);
     }
-    PyObject *operator()(char *s) const {
+    PyObject *operator()(const char *s) const {
         return Py_BuildValue("s", s);
     }
 
@@ -56,7 +56,6 @@ static PyObject *from_c_values(VARIANT_TYPE value) {
 VARIANT_TYPE to_c_values(A *self, PyObject *item) {
     std::string type(item->ob_type->tp_name);
 
-    PyObject *tmp;
     if (type == std::string("float")) {
         VARIANT_TYPE d = PyFloat_AsDouble(item);
         return d;
@@ -66,17 +65,9 @@ VARIANT_TYPE to_c_values(A *self, PyObject *item) {
         return l;
 
     } else if (type == std::string("str")) {
-        if (PyUnicode_Check(item)) {
-            tmp = PyUnicode_AsUTF8String(item);
-        } else if (PyBytes_Check(item)) {
-            tmp = PyObject_Bytes(item);
-        } else {
-            tmp = NULL;
-            PyErr_SetString(PyExc_Exception, "Wrong type");
-        }
-
-        VARIANT_TYPE s = PyBytes_AsString(tmp);
+        VARIANT_TYPE s = PyUnicode_AsUTF8(item);
         return s;
+
     } else {
         PyErr_SetString(PyExc_Exception, "Wrong type");
     }

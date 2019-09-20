@@ -3,6 +3,7 @@
 .*.swn
 .*.swm
 .*.swl
+.*.swk
 
 *.pyc
 __pycache__

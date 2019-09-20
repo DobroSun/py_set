@@ -1,5 +1,6 @@
 #include "Python.h"
 
+#include <iostream>
 #include <cstdio>
 #include <variant>
 #include <set>
@@ -32,17 +33,8 @@ void fill_pyset(A *self, int start, int stop, int step) {
     int p = (step > 0)?1: -1;
 
     for (long int i = start; p*i < p*stop; i += step) {
-        self->s->insert(i);
-    }
-}
-void fill_pyset(A *self, int start, int stop) {
-    for (long int i = start; i < stop; i++) {
-        self->s->insert(i);
-    }
-} 
-void fill_pyset(A *self, int stop) {
-    for (long int i = 0; i < stop; i++) {
-        self->s->insert(i);
+        VARIANT_TYPE a = i;
+        self->s->insert(a);
     }
 }
 

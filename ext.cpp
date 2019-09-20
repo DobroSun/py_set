@@ -3,24 +3,27 @@
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    //int start, stop, step;
+    int start, stop, step;
+    start = 0;stop = 0;step = 0;
+
     self->s = new std::set<VARIANT_TYPE>;
-/*
-    if (PyArg_ParseTuple(args, "|i", &stop)) {
-        printf("i\n");
-        
-        fill_pyset(self, stop);
-
-    } else if (PyArg_ParseTuple(args, "|ii", &start, &stop)) {
-        printf("ii\n");
-
-        fill_pyset(self, start, stop);
+    if (PyTuple_Size(args) == 0) {
 
     } else if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
-        printf("iii\n");
+        if (stop == 0 && step == 0) {
+            stop = start;
+            start = 0;
+            step = 1;
+            fill_pyset(self, start, stop, step);
 
-        fill_pyset(self, start, stop, step);
-    }*/
+        } else if (step == 0) {
+            step = 1;
+            fill_pyset(self, start, stop, step);
+
+        } else {
+            fill_pyset(self, start, stop, step);
+        }
+    }
     return 0;
 }
 

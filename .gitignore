@@ -1,9 +1,4 @@
-.*.swp
-.*.swo
-.*.swn
-.*.swm
-.*.swl
-.*.swk
+.*.sw[a-z]
 
 *.pyc
 __pycache__

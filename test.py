@@ -58,20 +58,19 @@ class TestSet(unittest.TestCase):
         except:
             self.fail()
 
-    def test_range_constructor(self):
-        try:
-            # Have to check (10, 4, -1) too
-            bst = pyset.BST(10)
-            self.assertEqual(bst.to_list(), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-            al = pyset.BST(2, 10)
-            ls = pyset.BST(10, 4, -1)
-        except:
-            self.fail()
-
     def test_to_list(self):
         bst = pyset.BST()
         bst.add(48)
-        self.assertEqual(bst.to_list(), [48])
+        bst.add(38.4)
+        self.assertEqual(bst.to_list(), [38.4, 48])
+
+    def test_range_constructor(self):
+        bst = pyset.BST(10)
+        self.assertEqual(bst.to_list(), list(range(10)))
+        al = pyset.BST(2, 10)
+        self.assertEqual(al.to_list(), list(range(2, 10)))
+        ls = pyset.BST(10, 4, -1)
+        self.assertEqual(ls.to_list(), list(sorted(range(10, 4, -1))))
 
     def test_iterations(self):
         expected = []

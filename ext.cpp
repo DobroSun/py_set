@@ -1,4 +1,3 @@
-#include <iostream>
 #include "utils.h"
 
 
@@ -10,13 +9,13 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     if (PyTuple_Size(args) == 0) {
 
     } else if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
-        if (stop == 0 && step == 0) {
+        if (!stop && !step) {
             stop = start;
             start = 0;
             step = 1;
             fill_pyset(self, start, stop, step);
 
-        } else if (step == 0) {
+        } else if (!step) {
             step = 1;
             fill_pyset(self, start, stop, step);
 
@@ -40,6 +39,7 @@ static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 static PyObject *pyset_iter(PyObject *p) {
     A *self;
     self = (A *)p;
+
     self->it = self->s->begin();
 
     Py_INCREF(p);
@@ -71,6 +71,11 @@ static PyObject *pyset_size(A *self) {
 static PyObject *pyset_empty(A *self) {
     int emp = self->s->empty();
     return Py_BuildValue("i", emp);
+}
+
+static PyObject *pyset_clear(A *self) {
+    self->s->clear();
+    Py_RETURN_NONE;
 }
 
 static PyObject *pyset_add(A *self, PyObject *args) {
@@ -116,6 +121,20 @@ static PyObject *pyset_to_list(A *self, PyObject *args) {
     return list;
 }
 
+static PyObject *pyset_from_list(A *self, PyObject *args) {
+
+    for (int i = 0; i < PySequence_Size(args); i++) {
+        PyObject *item = PySequence_GetItem(args, i);
+        for (int j = 0; j < PySequence_Size(item); j++) {
+
+            PyObject *var = PySequence_GetItem(item, j);
+            VARIANT_TYPE current = to_c_values(self, var);
+            self->s->insert(current);
+        }
+    }
+    Py_RETURN_NONE;
+}
+
 static PyTypeObject pysetType = {
     PyVarObject_HEAD_INIT(NULL, 0)
 };
@@ -123,15 +142,19 @@ static PyTypeObject pysetType = {
 
 static PyMethodDef pyset_methods[] = {
     {"size", (PyCFunction)pyset_size, METH_NOARGS,
-        "Return size of set"},
-    {"add", (PyCFunction)pyset_add, METH_VARARGS,
-        "Add item in set"},
-    {"find", (PyCFunction)pyset_find, METH_VARARGS,
-        "Search for items in set"},
+        "Return size of pyset"},
+    {"clear", (PyCFunction)pyset_clear, METH_NOARGS,
+        "Clear pyset"},
     {"is_empty", (PyCFunction)pyset_empty, METH_NOARGS,
         "Checks if pyset is empty or not"},
+    {"add", (PyCFunction)pyset_add, METH_VARARGS,
+        "Add item in pyset"},
+    {"find", (PyCFunction)pyset_find, METH_VARARGS,
+        "Search for items in pyset"},
     {"to_list", (PyCFunction)pyset_to_list, METH_VARARGS,
         "Return list of pyset items"},
+    {"from_list", (PyCFunction)pyset_from_list, METH_VARARGS,
+        "Add all items from iterables to pyset"},
     {NULL, NULL, 0, NULL}
 };
 

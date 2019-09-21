@@ -61,9 +61,9 @@ VARIANT_TYPE to_c_values(A *self, PyObject *item) {
         return s;
 
     } else {
-        PyErr_SetString(PyExc_Exception, "Wrong type");
+        PyErr_SetString(PyExc_Exception, "Undefined type");
     }
-    PyErr_SetString(PyExc_Exception, "Wrong type");
+    PyErr_SetString(PyExc_Exception, "Undefined type");
     return NULL;
 }
 

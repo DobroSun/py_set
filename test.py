@@ -82,5 +82,19 @@ class TestSet(unittest.TestCase):
             expected.append(i)
         self.assertEqual(bst.to_list(), expected)
 
+    def test_clear(self):
+        bst = pyset.BST(4, 100, 10)
+        bst.clear()
+        self.assertEqual(bst.to_list(), [])
+
+    def test_from_list(self):
+        bst = pyset.BST()
+        ex = list(range(200))
+        lo = list(range(400, 50000))
+        ex.extend(lo)
+        bst.from_list(ex, lo)
+        self.assertEqual(bst.to_list(), ex)
+
+
 if __name__ == "__main__":
     unittest.main()

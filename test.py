@@ -32,6 +32,8 @@ class TestSet(unittest.TestCase):
             bst.add(7)
             bst.add("lol")
             self.assertEqual(bst.size(), 3)
+            with self.assertRaises(TypeError):
+                bst.add(3, 40)
         except:
             self.fail()
 

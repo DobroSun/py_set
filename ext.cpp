@@ -90,8 +90,10 @@ static PyObject *pyset_add(A *self, PyObject *args) {
     PyObject *item;
     int size = PyTuple_Size(args);
 
-    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_Format(PyExc_TypeError, "add() takes only one positional argument, but %c were given", size);
-
+    if (!PyArg_ParseTuple(args, "O", &item)) {
+        PyErr_Format(PyExc_TypeError, "add() takes only 1 positional argument, but %d were given", size);
+        return NULL;
+    }
     auto current = to_c_values(self, item);
 
     self->s->insert(current);
@@ -104,8 +106,10 @@ static PyObject *pyset_find(A *self, PyObject *args) {
     int res;
     int size = PyTuple_Size(args);
 
-    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_Format(PyExc_TypeError, "find() takes only one positional argument, but %c were given", size);
-
+    if (!PyArg_ParseTuple(args, "O", &item)) {
+        PyErr_Format(PyExc_TypeError, "find() takes only 1 positional argument, but %d were given", size);
+        return NULL;
+    }
     auto current = to_c_values(self, item);
 
     auto search = self->s->find(current);

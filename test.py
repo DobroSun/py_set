@@ -16,6 +16,15 @@ class TestSet(unittest.TestCase):
         except Exception:
             self.fail("Can't create an instance of BST")
 
+    def test_delete(self):
+        bst = pyset.BST()
+        try:
+            del bst
+            with self.assertRaises(UnboundLocalError):
+                bst.add("Hello world")
+        except:
+            self.fail()
+
     def test_add(self):
         bst = pyset.BST()
         try:
@@ -46,6 +55,13 @@ class TestSet(unittest.TestCase):
         for i in range(10):
             bst.add(i)
         self.assertEqual(bst.size(), 10)
+
+    def test_max_size(self):
+        bst = pyset.BST(50.4)
+        try:
+            bst.max_size()
+        except:
+            self.fail()
 
     def test_several_instances(self):
         try:
@@ -94,6 +110,11 @@ class TestSet(unittest.TestCase):
         ex.extend(lo)
         bst.from_list(ex, lo)
         self.assertEqual(bst.to_list(), ex)
+
+    def test_in_pyset(self):
+        bst = pyset.BST(10)
+        res = int(3 in bst)
+        self.assertEqual(res, 1)
 
 
 if __name__ == "__main__":

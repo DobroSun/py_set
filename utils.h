@@ -29,7 +29,7 @@ struct visit_helper {
 };
 
 
-void fill_pyset(A *self, int start, int stop, int step) {
+void fill_pyset(A *self, double start, double stop, double step) {
     int p = (step > 0)?1: -1;
 
     for (long int i = start; p*i < p*stop; i += step) {
@@ -60,11 +60,13 @@ VARIANT_TYPE to_c_values(A *self, PyObject *item) {
         VARIANT_TYPE s = PyUnicode_AsUTF8(item);
         return s;
 
-    } else {
-        PyErr_SetString(PyExc_Exception, "Undefined type");
+    } else if (type == std::string("list") || type == std::string("tuple")
+               || type == std::string("set") || type == std::string("dict")) {
+        PyErr_SetString(PyExc_TypeError, "List(tuple) inserting not supported. Maybe you would like to use from_list() method.");
+
+   } else {
+        PyErr_SetString(PyExc_TypeError, "Undefined type");
     }
-    PyErr_SetString(PyExc_Exception, "Undefined type");
+    PyErr_SetString(PyExc_TypeError, "Undefined type");
     return NULL;
 }
-
-

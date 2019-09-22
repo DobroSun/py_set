@@ -2,13 +2,13 @@
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    int start, stop, step;
+    double start, stop, step;
     start = 0;stop = 0;step = 0;
 
     self->s = new std::set<VARIANT_TYPE>;
     if (PyTuple_Size(args) == 0) {
 
-    } else if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
+    } else if (PyArg_ParseTuple(args, "|ddd", &start, &stop, &step)) {
         if (!stop && !step) {
             stop = start;
             start = 0;
@@ -34,6 +34,10 @@ static PyObject *pyset_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
         return NULL;
     }
     return (PyObject *)self;
+}
+
+static void pyset_dealloc(A *self) {
+    delete self->s;
 }
 
 static PyObject *pyset_iter(PyObject *p) {
@@ -67,6 +71,10 @@ static PyObject *pyset_size(A *self) {
     return Py_BuildValue("i", len);
 }
 
+static PyObject *pyset_max_size(A *self) {
+    int max_size = self->s->max_size();
+    return Py_BuildValue("i", max_size);
+}
 
 static PyObject *pyset_empty(A *self) {
     int emp = self->s->empty();
@@ -80,8 +88,9 @@ static PyObject *pyset_clear(A *self) {
 
 static PyObject *pyset_add(A *self, PyObject *args) {
     PyObject *item;
+    int size = PyTuple_Size(args);
 
-    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_Format(PyExc_TypeError, "add() takes only one positional argument, but %c were given", size);
 
     auto current = to_c_values(self, item);
 
@@ -93,8 +102,9 @@ static PyObject *pyset_add(A *self, PyObject *args) {
 static PyObject *pyset_find(A *self, PyObject *args) {
     PyObject *item;
     int res;
+    int size = PyTuple_Size(args);
 
-    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_SetString(PyExc_Exception, "Exception");
+    if (!PyArg_ParseTuple(args, "O", &item)) PyErr_Format(PyExc_TypeError, "find() takes only one positional argument, but %c were given", size);
 
     auto current = to_c_values(self, item);
 
@@ -139,7 +149,6 @@ static PyTypeObject pysetType = {
     PyVarObject_HEAD_INIT(NULL, 0)
 };
 
-
 static PyMethodDef pyset_methods[] = {
     {"size", (PyCFunction)pyset_size, METH_NOARGS,
         "Return size of pyset"},
@@ -147,6 +156,8 @@ static PyMethodDef pyset_methods[] = {
         "Clear pyset"},
     {"is_empty", (PyCFunction)pyset_empty, METH_NOARGS,
         "Checks if pyset is empty or not"},
+    {"max_size", (PyCFunction)pyset_max_size, METH_NOARGS,
+        "Return max size of pyset"},
     {"add", (PyCFunction)pyset_add, METH_VARARGS,
         "Add item in pyset"},
     {"find", (PyCFunction)pyset_find, METH_VARARGS,
@@ -172,15 +183,16 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     PyObject *m;
 
     // It doesn't work inside pysetType, so It has to be defined there
-    pysetType.tp_name = "pyset.BST",
-    pysetType.tp_itemsize = 0,
-    pysetType.tp_flags = Py_TPFLAGS_DEFAULT,
-    pysetType.tp_basicsize = sizeof(A),
+    pysetType.tp_name = "pyset.BST";
+	pysetType.tp_doc = "";
+    pysetType.tp_flags = Py_TPFLAGS_DEFAULT;
+    pysetType.tp_basicsize = sizeof(A);
     pysetType.tp_new = pyset_new;
     pysetType.tp_init = (initproc)pyset_init;
-    pysetType.tp_methods = pyset_methods;
+    pysetType.tp_dealloc = (destructor)pyset_dealloc;
     pysetType.tp_iter = pyset_iter;
     pysetType.tp_iternext = pyset_iternext;
+    pysetType.tp_methods = pyset_methods;
     
     if (PyType_Ready(&pysetType) < 0) return NULL;
 

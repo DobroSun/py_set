@@ -43,6 +43,12 @@ class TestSet(unittest.TestCase):
         self.assertEqual(bst.find("lol"), 1)
         self.assertEqual(bst.find(38450), 0)
 
+    def test_remove(self):
+        l = range(1, 100)
+        bst = pyset.BST(1, 100)
+        bst.remove(40)
+        bst.remove("Not in pyset")
+        self.assertEqual(bst.size(), len(list(l)) - 1)
 
     def test_is_empty(self):
         bst = pyset.BST()

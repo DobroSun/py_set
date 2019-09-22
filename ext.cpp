@@ -121,6 +121,19 @@ static PyObject *pyset_find(A *self, PyObject *args) {
     return Py_BuildValue("i", res);
 }
 
+static PyObject *pyset_remove(A *self, PyObject *args) {
+    PyObject *item;
+    int size = PyTuple_Size(args);
+
+    if (!PyArg_ParseTuple(args, "O", &item)) {
+        PyErr_Format(PyExc_TypeError, "remove() takes only 1 positional argument, but %d were given", size);
+        return NULL;
+    }
+    auto current = to_c_values(self, item);
+    self->s->erase(current);
+    Py_RETURN_NONE;
+}
+
 static PyObject *pyset_to_list(A *self, PyObject *args) {
     PyObject *list;
     list = PyList_New(0);
@@ -131,7 +144,6 @@ static PyObject *pyset_to_list(A *self, PyObject *args) {
         PyObject *item = from_c_values(i);
         PyList_Append(list, item);
     }
-    
     return list;
 }
 
@@ -165,9 +177,11 @@ static PyMethodDef pyset_methods[] = {
     {"add", (PyCFunction)pyset_add, METH_VARARGS,
         "Add item in pyset"},
     {"find", (PyCFunction)pyset_find, METH_VARARGS,
-        "Search for items in pyset"},
+        "Search for item in pyset. If item is in pyset returns 1 else 0"},
+    {"remove", (PyCFunction)pyset_remove, METH_VARARGS,
+        "Removes given item from pyset. If item not found do nothing"},
     {"to_list", (PyCFunction)pyset_to_list, METH_VARARGS,
-        "Return list of pyset items"},
+        "Return list of pyset's items"},
     {"from_list", (PyCFunction)pyset_from_list, METH_VARARGS,
         "Add all items from iterables to pyset"},
     {NULL, NULL, 0, NULL}

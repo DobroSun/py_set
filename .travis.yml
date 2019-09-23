@@ -1,4 +1,5 @@
 language: python
 
 script: 
+    - cd docker/
     - ./build.sh

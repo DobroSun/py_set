@@ -2,7 +2,6 @@
 
 Py_ssize_t pyset_as_mapping_length(A *self);
 PyObject *pyset_as_mapping_getitem(A *self, PyObject *key);
-int pyset_as_mapping_setitem(A *self, PyObject *key, PyObject *value);
 
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
@@ -193,44 +192,39 @@ static PyMethodDef pyset_methods[] = {
 
 static PyMappingMethods pyset_mapping_methods = {
     (lenfunc)pyset_as_mapping_length,
-    //(binaryfunc)pyset_as_mapping_getitem,
-    //(objobjargproc)pyset_as_mapping_setitem,
+    (binaryfunc)pyset_as_mapping_getitem,
 };
 
 Py_ssize_t pyset_as_mapping_length(A *self) {
     Py_ssize_t len = self->s->size();
     return len;
 }
-/*
-PyObject *pyset_as_mapping_getitem(A *self, PyObject *key) {
-    PyObject *key_c;
 
-    if (!PyArg_ParseTuple(key, "O", &key_c)) {
-        PyErr_Format(PyExc_TypeError, "Error");
-        return NULL;
-    }
-    VARIANT_TYPE new_key = to_c_values(self, key_c);
+PyObject *pyset_as_mapping_getitem(A *self, PyObject *args) {
+    int key = PyLong_AsLong(args);
     self->it = self->s->begin();
-    PyObject *tmp = from_c_values(*self->it);
 
+    for (int i = 0; i < key; i++) (self->it)++;
+
+    PyObject *tmp = from_c_values(*self->it);
     return tmp;
-}*/
+}
 
 
 static struct PyModuleDef pysetmodule = {
     PyModuleDef_HEAD_INIT,
-    "pyset",
-    "",
+    "c_lib",
+    "Module, actualazing red-black search tree from c++ for python3.",
     -1,
     NULL, NULL, NULL, NULL, NULL
 };
 
 
-PyMODINIT_FUNC PyInit_pyset(void) {
+PyMODINIT_FUNC PyInit_c_lib(void) {
     PyObject *m;
 
     // It doesn't work inside pysetType, so It has to be defined there
-    pysetType.tp_name = "pyset.BST";
+    pysetType.tp_name = "c_lib.pyset";
     pysetType.tp_doc = "";
     pysetType.tp_flags = Py_TPFLAGS_DEFAULT;
     pysetType.tp_basicsize = sizeof(A);
@@ -247,6 +241,6 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     m = PyModule_Create(&pysetmodule);
 
     Py_INCREF(&pysetType);
-    PyModule_AddObject(m, "BST", (PyObject *)&pysetType);
+    PyModule_AddObject(m, "pyset", (PyObject *)&pysetType);
     return m;
 }

@@ -124,6 +124,9 @@ class TestSet(unittest.TestCase):
         res = int(3 in bst)
         self.assertEqual(res, 1)
 
+    def test_len(self):
+        bst = pyset.BST(100)
+        self.assertEqual(len(bst), 100)
 
 if __name__ == "__main__":
     unittest.main()

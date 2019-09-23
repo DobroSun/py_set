@@ -1,5 +1,9 @@
 #include "utils.h"
 
+Py_ssize_t pyset_as_mapping_length(A *self);
+PyObject *pyset_as_mapping_getitem(A *self, PyObject *key);
+int pyset_as_mapping_setitem(A *self, PyObject *key, PyObject *value);
+
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     double start, stop, step;
@@ -187,6 +191,31 @@ static PyMethodDef pyset_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+static PyMappingMethods pyset_mapping_methods = {
+    (lenfunc)pyset_as_mapping_length,
+    //(binaryfunc)pyset_as_mapping_getitem,
+    //(objobjargproc)pyset_as_mapping_setitem,
+};
+
+Py_ssize_t pyset_as_mapping_length(A *self) {
+    Py_ssize_t len = self->s->size();
+    return len;
+}
+/*
+PyObject *pyset_as_mapping_getitem(A *self, PyObject *key) {
+    PyObject *key_c;
+
+    if (!PyArg_ParseTuple(key, "O", &key_c)) {
+        PyErr_Format(PyExc_TypeError, "Error");
+        return NULL;
+    }
+    VARIANT_TYPE new_key = to_c_values(self, key_c);
+    self->it = self->s->begin();
+    PyObject *tmp = from_c_values(*self->it);
+
+    return tmp;
+}*/
+
 
 static struct PyModuleDef pysetmodule = {
     PyModuleDef_HEAD_INIT,
@@ -202,7 +231,7 @@ PyMODINIT_FUNC PyInit_pyset(void) {
 
     // It doesn't work inside pysetType, so It has to be defined there
     pysetType.tp_name = "pyset.BST";
-	pysetType.tp_doc = "";
+    pysetType.tp_doc = "";
     pysetType.tp_flags = Py_TPFLAGS_DEFAULT;
     pysetType.tp_basicsize = sizeof(A);
     pysetType.tp_new = pyset_new;
@@ -211,6 +240,7 @@ PyMODINIT_FUNC PyInit_pyset(void) {
     pysetType.tp_iter = pyset_iter;
     pysetType.tp_iternext = pyset_iternext;
     pysetType.tp_methods = pyset_methods;
+    pysetType.tp_as_mapping = &pyset_mapping_methods;
     
     if (PyType_Ready(&pysetType) < 0) return NULL;
 

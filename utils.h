@@ -28,7 +28,6 @@ struct visit_helper {
 
 };
 
-
 void fill_pyset(A *self, double start, double stop, double step) {
     int p = (step > 0)?1: -1;
 

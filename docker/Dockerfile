@@ -10,4 +10,4 @@ COPY . .
 WORKDIR .
 
 RUN python3 setup.py install
-RUN python3 test.py
+RUN python3 test_upload/test.py

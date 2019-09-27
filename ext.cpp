@@ -1,9 +1,5 @@
 #include "utils.h"
 
-Py_ssize_t pyset_as_mapping_length(A *self);
-PyObject *pyset_as_mapping_getitem(A *self, PyObject *key);
-
-
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     double start, stop, step;
     start = 0;stop = 0;step = 0;
@@ -190,11 +186,6 @@ static PyMethodDef pyset_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-static PyMappingMethods pyset_mapping_methods = {
-    (lenfunc)pyset_as_mapping_length,
-    (binaryfunc)pyset_as_mapping_getitem,
-};
-
 Py_ssize_t pyset_as_mapping_length(A *self) {
     Py_ssize_t len = self->s->size();
     return len;
@@ -209,6 +200,27 @@ PyObject *pyset_as_mapping_getitem(A *self, PyObject *args) {
     PyObject *tmp = from_c_values(*self->it);
     return tmp;
 }
+
+static PyMappingMethods pyset_mapping_methods = {
+    (lenfunc)pyset_as_mapping_length,
+    (binaryfunc)pyset_as_mapping_getitem,
+};
+
+PyObject *pyset_as_sequence_contains(A *self, PyObject *value) {
+    return pyset_find(self, value);
+}
+
+static PySequenceMethods pyset_sequence_methods = {
+    0, // garbage realization
+    0,
+    0,
+    0,
+    0,
+    0,
+    (void *)pyset_as_sequence_contains,
+    0,
+    0,
+};
 
 
 static struct PyModuleDef pysetmodule = {
@@ -235,6 +247,7 @@ PyMODINIT_FUNC PyInit_c_lib(void) {
     pysetType.tp_iternext = pyset_iternext;
     pysetType.tp_methods = pyset_methods;
     pysetType.tp_as_mapping = &pyset_mapping_methods;
+    pysetType.tp_as_sequence = &pyset_sequence_methods;
     
     if (PyType_Ready(&pysetType) < 0) return NULL;
 

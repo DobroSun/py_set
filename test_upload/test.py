@@ -134,6 +134,13 @@ class TestSet(unittest.TestCase):
         self.assertEqual(bst[5], 5)
         self.assertEqual(bst[9], 9)
 
+    def test_in_pyset(self):
+        bst = pyset(100)
+        res = 3.4 in bst
+        self.assertEqual(res, 0)
+        res = 10 in bst
+        self.assertEqual(res, 1)
+
 
 if __name__ == "__main__":
     unittest.main()

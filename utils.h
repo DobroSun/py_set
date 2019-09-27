@@ -25,7 +25,6 @@ struct visit_helper {
     PyObject *operator()(const char *s) const {
         return Py_BuildValue("s", s);
     }
-
 };
 
 void fill_pyset(A *self, double start, double stop, double step) {

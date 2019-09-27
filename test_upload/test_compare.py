@@ -36,10 +36,10 @@ start = time.time()
 for i in random_list:
     i in st 
 end = time.time() - start 
-print("Set time on searching in 10^6 items: %.2fms" % (end * 1000))
+print("Set time on searching in 10^5 items: %.2fms" % (end * 1000))
 
 start = time.time()
 for i in random_list:
     pst.find(i)
 end = time.time() - start 
-print("Pyset time on searching in 10^6 items: %.2fms" % (end * 1000))
+print("Pyset time on searching in 10^5 items: %.2fms" % (end * 1000))

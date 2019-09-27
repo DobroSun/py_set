@@ -217,7 +217,7 @@ static PySequenceMethods pyset_sequence_methods = {
     0,
     0,
     0,
-    (void *)pyset_as_sequence_contains,
+    0, //(void *)pyset_as_sequence_contains,
     0,
     0,
 };

@@ -131,7 +131,7 @@ class TestSet(unittest.TestCase):
 
     def test_contains_method(self):
         bst = pyset(100)
-        res = 104 in bst
+        res = "NOT IN PYSET" in bst
         self.assertEqual(res, 0)
         res = 10 in bst
         self.assertEqual(res, 1)

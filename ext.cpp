@@ -5,6 +5,7 @@ static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
     start = 0;stop = 0;step = 0;
 
     self->s = new std::set<VARIANT_TYPE>;
+
     if (PyTuple_Size(args) == 0) {
 
     } else if (PyArg_ParseTuple(args, "|ddd", &start, &stop, &step)) {
@@ -113,7 +114,7 @@ static PyObject *pyset_find(A *self, PyObject *args) {
 
     auto search = self->s->find(current);
     if (search != self->s->end()) {
-       res = 1;
+        res = 1;
     } else {
         res = 0;
     }
@@ -206,9 +207,9 @@ static PyMappingMethods pyset_mapping_methods = {
     (binaryfunc)pyset_as_mapping_getitem,
 };
 
-static PyObject *pyset_as_sequence_contains(A *self, PyObject *value) {
+int pyset_as_sequence_contains(A *self, PyObject *value) {
     PyObject *args = Py_BuildValue("(O)", value);
-    return pyset_find(self, args);
+    return PyLong_AsLong(pyset_find(self, args));
 }
 
 static PySequenceMethods pyset_sequence_methods = {
@@ -240,7 +241,7 @@ PyMODINIT_FUNC PyInit_c_lib(void) {
     // It doesn't work inside pysetType, so It has to be defined there
     pysetType.tp_name = "c_lib.pyset";
     pysetType.tp_doc = "";
-    pysetType.tp_flags = Py_TPFLAGS_DEFAULT;
+    pysetType.tp_flags = Py_TPFLAGS_DEFAULT,
     pysetType.tp_basicsize = sizeof(A);
     pysetType.tp_new = pyset_new;
     pysetType.tp_init = (initproc)pyset_init;

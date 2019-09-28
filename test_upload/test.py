@@ -119,11 +119,6 @@ class TestSet(unittest.TestCase):
         bst.from_list(ex, lo)
         self.assertEqual(bst.to_list(), ex)
 
-    def test_in_pyset(self):
-        bst = pyset(10)
-        res = int(3 in bst)
-        self.assertEqual(res, 1)
-
     def test_len(self):
         bst = pyset(100)
         self.assertEqual(len(bst), 100)
@@ -136,7 +131,7 @@ class TestSet(unittest.TestCase):
 
     def test_contains_method(self):
         bst = pyset(100)
-        res = 3.4 in bst
+        res = 104 in bst
         self.assertEqual(res, 0)
         res = 10 in bst
         self.assertEqual(res, 1)

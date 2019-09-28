@@ -206,18 +206,20 @@ static PyMappingMethods pyset_mapping_methods = {
     (binaryfunc)pyset_as_mapping_getitem,
 };
 
-PyObject *pyset_as_sequence_contains(A *self, PyObject *value) {
-    return pyset_find(self, value);
+static PyObject *pyset_as_sequence_contains(A *self, PyObject *value) {
+    PyObject *args = Py_BuildValue("(O)", value);
+    return pyset_find(self, args);
 }
 
 static PySequenceMethods pyset_sequence_methods = {
-    0, // garbage realization
     0,
     0,
     0,
     0,
     0,
-    0, //(void *)pyset_as_sequence_contains,
+    0,
+    0,
+    (objobjproc)pyset_as_sequence_contains, // objobjproc(contains)
     0,
     0,
 };

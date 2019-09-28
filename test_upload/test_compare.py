@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from c_lib import pyset
+from py_set import pyset
 import time
 import sys
 import random

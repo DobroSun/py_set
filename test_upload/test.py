@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
-from c_lib import pyset
+from py_set import pyset
 
 class TestSet(unittest.TestCase):
     def test_import(self):
@@ -95,6 +95,8 @@ class TestSet(unittest.TestCase):
         self.assertEqual(al.to_list(), list(range(2, 10)))
         ls = pyset(10, 4, -1)
         self.assertEqual(ls.to_list(), list(sorted(range(10, 4, -1))))
+        rbt = pyset(0.5, 2.5, 0.5)
+        self.assertEqual(rbt.to_list(), [0.5, 1.0, 1.5, 2.0])
 
     def test_iterations(self):
         expected = []

@@ -235,7 +235,7 @@ static struct PyModuleDef pysetmodule = {
 };
 
 
-PyMODINIT_FUNC PyInit_c_lib(void) {
+PyMODINIT_FUNC PyInit_py_set(void) {
     PyObject *m;
 
     // It doesn't work inside pysetType, so It has to be defined there

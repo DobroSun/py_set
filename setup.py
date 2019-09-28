@@ -5,12 +5,12 @@ def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as f:
         return f.read()
 
-module = Extension("c_lib",
+module = Extension("py_set",
                    extra_compile_args=["-std=c++17"],
                    sources = ["ext.cpp"])
          
-setup(name="c_set",
-      version="0.1.7",
+setup(name="py_set",
+      version="0.1.1",
       description="C extension module actualizing red-black search tree for Python3",
       long_description=read("README.md"),
       author="Dobrogost Pavel",

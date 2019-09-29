@@ -9,4 +9,3 @@ upload:
 clean:
 	docker container prune -f
 	docker images --filter "dangling=true" -q | xargs docker rmi
-

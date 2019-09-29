@@ -27,7 +27,7 @@ struct visit_helper {
     }
 };
 
-void fill_pyset(A *self, double start, double stop, double step) {
+void fill_pyset(A *self, int start, int stop, int step) {
     int p = (step > 0)?1: -1;
 
     for (long int i = start; p*i < p*stop; i += step) {

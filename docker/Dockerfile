@@ -11,5 +11,4 @@ WORKDIR .
 
 RUN python3 setup.py install
 RUN bash -c "python3 test_upload/test.py; python3 test_upload/test_compare.py"
-
 RUN python3 t.py

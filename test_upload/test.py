@@ -65,7 +65,7 @@ class TestSet(unittest.TestCase):
         self.assertEqual(bst.size(), 10)
 
     def test_max_size(self):
-        bst = pyset(50.4)
+        bst = pyset()
         try:
             bst.max_size()
         except:
@@ -95,8 +95,6 @@ class TestSet(unittest.TestCase):
         self.assertEqual(al.to_list(), list(range(2, 10)))
         ls = pyset(10, 4, -1)
         self.assertEqual(ls.to_list(), list(sorted(range(10, 4, -1))))
-        rbt = pyset(0.5, 2.5, 0.5)
-        self.assertEqual(rbt.to_list(), [0.5, 1.0, 1.5, 2.0])
 
     def test_iterations(self):
         expected = []

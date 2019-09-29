@@ -5,7 +5,7 @@ PySet is wrapper of C++ standart red-black tree realization(std::set)
 
 Usage
 -----
-``
+```
 >>>rbt = pyset()\n
 >>>
 >>>rbt.size()
@@ -21,7 +21,8 @@ Usage
 >>>
 >>>del rbt
 >>>
->>>rbt = pyset(0.5, 10, 1.5)
+>>>rbt = pyset(5, 10, 1)
 >>>rbt.to_list()
+[5, 6, 7, 8, 9]
 
-``
+```

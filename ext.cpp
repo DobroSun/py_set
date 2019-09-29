@@ -1,14 +1,13 @@
 #include "utils.h"
 
 static int pyset_init(A *self, PyObject *args, PyObject *kwargs) {
-    double start, stop, step;
-    start = 0;stop = 0;step = 0;
+    int start, stop, step;
+    start = 0, stop = 0, step = 0;
 
     self->s = new std::set<VARIANT_TYPE>;
-
     if (PyTuple_Size(args) == 0) {
 
-    } else if (PyArg_ParseTuple(args, "|ddd", &start, &stop, &step)) {
+    } else if (PyArg_ParseTuple(args, "|iii", &start, &stop, &step)) {
         if (!stop && !step) {
             stop = start;
             start = 0;

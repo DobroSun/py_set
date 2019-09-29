@@ -6,7 +6,7 @@ from py_set import pyset
 class TestSet(unittest.TestCase):
     def test_import(self):
         try:
-            from c_lib import pyset
+            from py_set import pyset
         except ImportError:
             self.fail()
 

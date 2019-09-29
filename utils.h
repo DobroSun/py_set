@@ -1,7 +1,5 @@
 #include "Python.h"
 
-#include <iostream>
-#include <cstdio>
 #include <variant>
 #include <set>
 #include <string>

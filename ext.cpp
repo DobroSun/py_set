@@ -133,6 +133,31 @@ static PyObject *pyset_remove(A *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
+static PyObject *pyset_pop(A *self, PyObject *args) {
+    if (!self->s->size()) {
+        PyErr_SetString(PyExc_IndexError, "Pyset is empty");
+        return NULL;
+    }
+
+    PyObject *item;
+    int size = PyTuple_Size(args);
+
+    if (!PyArg_ParseTuple(args, "O", &item)) {
+        PyErr_Format(PyExc_TypeError, "pop() takes only 1 positional argument, but %d were given", size);
+        return NULL;
+    }
+    auto current = to_c_values(self, item);
+
+    auto search = self->s->find(current);
+    if (search != self->s->end()) {
+        self->s->erase(search);
+    } else {
+        PyErr_SetString(PyExc_IndexError, "Index out of range");
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
+
 static PyObject *pyset_to_list(A *self, PyObject *args) {
     PyObject *list;
     list = PyList_New(0);
@@ -179,6 +204,8 @@ static PyMethodDef pyset_methods[] = {
         "Search for item in pyset. If item is in pyset returns 1 else 0"},
     {"remove", (PyCFunction)pyset_remove, METH_VARARGS,
         "Removes given item from pyset. If item not found do nothing"},
+    {"pop", (PyCFunction)pyset_pop, METH_VARARGS,
+        "Removes given item from pyset. If item not found sets an error"},
     {"to_list", (PyCFunction)pyset_to_list, METH_VARARGS,
         "Return list of pyset's items"},
     {"from_list", (PyCFunction)pyset_from_list, METH_VARARGS,

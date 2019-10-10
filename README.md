@@ -44,6 +44,10 @@ Usage
 >>>rbt.clear()
 >>>rbt.to_list()
 []
+>>>rbt.remove("Nothing")
+>>>rbt.pop("Error")
+IndexError: Pyset is empty
+
 >>>del rbt
 ```
 

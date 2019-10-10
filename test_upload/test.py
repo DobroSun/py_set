@@ -50,6 +50,16 @@ class TestSet(unittest.TestCase):
         bst.remove("Not in pyset")
         self.assertEqual(bst.size(), len(list(l)) - 1)
 
+    def test_pop(self):
+        bst = pyset()
+        with self.assertRaises(IndexError):
+            bst.pop("Hello world")
+
+        bst.add(2)
+        with self.assertRaises(IndexError):
+            bst.pop(4)
+
+
     def test_is_empty(self):
         bst = pyset()
         self.assertEqual(bst.is_empty(), 1)

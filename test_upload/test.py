@@ -58,6 +58,8 @@ class TestSet(unittest.TestCase):
         bst.add(2)
         with self.assertRaises(IndexError):
             bst.pop(4)
+        bst.pop(2)
+        self.assertEqual(bst.to_list(), [])
 
 
     def test_is_empty(self):

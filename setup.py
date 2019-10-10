@@ -11,9 +11,10 @@ module = Extension("py_set",
                    sources = ["ext.cpp"])
          
 setup(name="py_set",
-      version="0.1.2",
+      version="0.1.3",
       description='C extension module actualizing red-black search tree for Python3',
       long_description=read('README.md'),
+      long_description_content_type='text/markdown',
       author="Dobrogost Pavel",
       author_email="mr.dobrogost02@mail.ru",
       url="https://github.com/DobroSun/py_set",
